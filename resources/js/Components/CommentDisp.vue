@@ -12,19 +12,16 @@ const props = defineProps({
 })
 
 const comments = reactive({})
+const users = reactive({})
 
 onMounted(() => {
     axios.get(`/post/${props.post_id}/get_comments`)
     .then( res =>{
-        console.log('res.data.comments',res.data.comments)
+        console.log('res.data',res.data)
         comments.value = res.data.comments
+        users.value = res.data.users
     })
 })
-
-const proxy_comments = new Proxy(comments,{})
-
-console.log('代入後のcomments',comments)
-console.log('Proxy',proxy_comments)
 
 </script>
 
@@ -51,12 +48,25 @@ console.log('Proxy',proxy_comments)
  </div> -->
 
     <div class="my-4 max-w-7xl mx-auto sm:px-6 lg:px-8">
+      <h6 class="text-2xl pb-4">{{ props.post_id }}のコメント一覧</h6>
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 bg-white border-b border-gray-200">
+            <div v-for="comment in comments.value" class="p-6 bg-white border-b border-gray-200">
             <section class="text-gray-600 body-font">
-                <h6 class="text-2xl pb-4">{{ props.post_id }}のコメント一覧</h6>
-                <div v-for="comment in comments">
-                    <h6 class="text-2xl pb-4">{{ comment.text }}</h6>
+                <div>
+                  <div class="py-8 flex flex-wrap md:flex-nowrap">
+                    <!-- <div class="md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col">
+                      <div v-for="user in users.value">
+                        <span v-if="user.id == comment.user_id" class="font-semibold title-font text-gray-700">{{ user.name }}</span>
+                      </div>
+                      <span class="mt-1 text-gray-500 text-sm">{{ dayjs(comment.created_at).format('YYYY-MM-DD') }}</span>
+                    </div> -->
+                    <div class="md:flex-grow">
+                      <div v-for="user in users.value">
+                        <h2 v-if="user.id == comment.user_id" class="text-2xl font-medium text-gray-900 title-font mb-2">{{ user.name }}</h2>
+                      </div>
+                      <p class="leading-relaxed">{{ comment.text }}</p>
+                    </div>
+                  </div>
                 </div>
             </section>
             </div>

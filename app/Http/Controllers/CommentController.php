@@ -15,14 +15,26 @@ class CommentController extends Controller
 {
     public function getComments(Post $post){
         $comments = [];
+        $users = [];
 
         foreach($post->comments as $comment){
             array_push($comments, $comment);
         }
 
-        return response()->json([
+        foreach($post->comments as $comment){
+            if(!in_array($comment->user,$users)){
+                array_push($users, $comment->user);
+            }
+        }
+
+        return [
             'comments' => $comments,
-        ], Response::HTTP_OK);
+            'users' => $users,
+        ];
+
+        // return response()->json([
+        //     'comments' => $comments,
+        // ], Response::HTTP_OK);
     }
 
     public function store(Request $request){
