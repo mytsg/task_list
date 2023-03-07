@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,5 +40,13 @@ Route::get('/dashboard', function () {
 
 Route::resource('user',UserController::class)
 ->middleware(['auth','verified']);
+
+Route::get('/post/{post}/get_comments',[CommentController::class, 'getComments'])
+->middleware(['auth', 'verified'])->name('getComments');
+
+Route::resource('post.comments',CommentController::class,[
+    'only' => ['store', 'update', 'destroy'],
+])->middleware(['auth', 'verified']);
+
 
 require __DIR__.'/auth.php';

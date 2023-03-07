@@ -1,63 +1,26 @@
 <script setup>
-    import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
-    import { Head, Link } from '@inertiajs/inertia-vue3';
-    import axios from 'axios';
-    import { onMounted, reactive, ref } from 'vue';
-    import dayjs from 'dayjs'
+import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import CommentCreate from '@/Components/CommentCreate.vue';
+import CommentDisp from '@/Components/CommentDisp.vue';
+import { Head, Link } from '@inertiajs/inertia-vue3';
+import axios from 'axios';
+import { onMounted, reactive, ref } from 'vue';
+import dayjs from 'dayjs';
 
-    // export default {
-    //     data() {
-    //         return {
-    //             loginUserId: "",
-    //         },
-    //     },
-    // }
+const props = defineProps({
+    'post': Object,
+    'user': Object,
+})
 
-    const props = defineProps({
-        'post': Object,
-        'user': Object
-    })
+var loginUserId = ''
+onMounted(() => {
 
-    var loginUserId = ''
-    onMounted(() => {
+})
 
-        async() => {
-            try{
-                await axios.get('/api/user')
-                .then( res => {
-                    console.log('async-await',res.data)
-                })
-                toggleStatus()
-            } catch(e) {
-                console.log('失敗')
-            }
-
-            if(props.post.user_id == loginUserId){
-                console.log('true')
-            } else {
-                console.log('else')
-            }
-        }
-
-        // axios.get('/api/user')
-        // .then( res => {
-        //     console.log(res)
-        //     var loginUserId = res.data.id
-        //     console.log('post.user_id',props.post.user_id)
-
-        //     console.log('loginUserId',loginUserId)
-        //     if(props.post.user_id == loginUserId){
-        //         console.log('true')
-        //     } else {
-        //         console.log('else')
-        //     }
-        // } )
-        // console.log('外から取得',res.data)
-    })
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="タスク詳細" />
 
     <BreezeAuthenticatedLayout>
         <template #header>
@@ -111,6 +74,8 @@
                         </section>
                     </div>
                 </div>
+                <CommentDisp :post_id="post.id"/>
+                <CommentCreate :post_id="post.id" />
             </div>
         </div>
     </BreezeAuthenticatedLayout>

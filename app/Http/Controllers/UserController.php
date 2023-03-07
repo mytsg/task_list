@@ -54,7 +54,7 @@ class UserController extends Controller
         $user = User::findOrFail($userId);
         $posts = Post::getPostForParticularUser($request->search, $request->label, $user->id)
                 ->select('id','title','user_id','deadline','label','created_at','updated_at','content')
-                ->oredreBy('created_at','desc')
+                ->orderBy('created_at','desc')
                 ->get();
 
         return Inertia::render('User/Show',[

@@ -17,7 +17,6 @@
             .then( res => {
                 console.log(res.data)
             })
-        toggleStatus()
         } catch(e) {
             console.log(e.message)
         }

@@ -20,7 +20,7 @@ class PostController extends Controller
     public function index(Request $request)
     {
         $posts = Post::searchPost($request->search,$request->label)
-            ->select('id','title','user_id','deadline','label','created_at','updated_at','content','deadline')
+            ->select('id','title','user_id','label','created_at','updated_at','content','deadline')
             ->orderBy('created_at','desc')
             ->get();
 
