@@ -1,35 +1,30 @@
 <script setup>
-    import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
-    import { Head, Link } from '@inertiajs/inertia-vue3';
-    import axios from 'axios';
-    import { onMounted, reactive, ref } from 'vue';
-    import dayjs from 'dayjs'
+import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import { Head, Link } from '@inertiajs/inertia-vue3';
+import axios from 'axios';
+import { onMounted, reactive, ref, watch } from 'vue';
+import dayjs from 'dayjs'
+import searchByDeadline from '@/Components/searchByDeadline.vue'
+import { useRouter, useRoute, routerKey } from 'vue-router';
 
-    const props = defineProps({
-        'posts': Array,
-        'users' : Array,
-    })
-    const search =ref('');
-    const label = ref('');
-    const searchPost = async() => {
-        try{
-            await axios.get(`/api/searchPost/?search=${search.value}&&label=${label.value}`)
-            .then( res => {
-                console.log(res.data)
-            })
-        } catch(e) {
-            console.log(e.message)
-        }
-    }
-
-    onMounted(() => {
-        axios.get('/api/user')
+const props = defineProps({
+    'posts': Array,
+    'users' : Array,
+})
+const search =ref('');
+const label = ref('');
+const searchPost = async() => {
+    try{
+        await axios.get(`/api/searchPost/?search=${search.value}&&label=${label.value}`)
         .then( res => {
-            console.log(res)
+            console.log(res.data)
         })
-    })
+    } catch(e) {
+        console.log(e.message)
+    }
+}
 
-
+const deadline = ref('')
 </script>
 
 <template>
@@ -40,6 +35,11 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 タスク一覧
             </h2>
+            <div class="pt-4">
+                <label for="deadline">
+                    <input id="deadline" class="pl-4" type="checkbox" name="deadline" v-model="deadline">期限で絞り込む
+                </label>
+            </div>
             <div class="flex justify-between">
                 <div class="searchComponent my-4">
                     <form>
@@ -60,6 +60,9 @@
                     </form>
                 </div>
                 <Link :href="route('post.create')" class="text-white pt-6 bg-green-400 rounded">新しく作成する</Link>
+            </div>
+            <div v-show="deadline">
+                <searchByDeadline />
             </div>
         </template>
 

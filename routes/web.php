@@ -45,8 +45,10 @@ Route::get('/post/{post}/get_comments',[CommentController::class, 'getComments']
 ->middleware(['auth', 'verified'])->name('getComments');
 
 Route::resource('post.comments',CommentController::class,[
-    'only' => ['store', 'update', 'destroy'],
+    'only' => ['update', 'destroy'],
 ])->middleware(['auth', 'verified']);
 
+Route::post('/post/comments', [CommentController::class, 'storeComments'])
+->middleware(['auth', 'verified'])->name('storeComments');
 
 require __DIR__.'/auth.php';

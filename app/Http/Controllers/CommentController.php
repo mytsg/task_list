@@ -37,14 +37,16 @@ class CommentController extends Controller
         // ], Response::HTTP_OK);
     }
 
-    public function store(Request $request){
-        dd($request);
+    public function storeComments(Request $request){
+        // dd($request);
 
         Comment::create([
             'user_id' => Auth::id(),
             'text' => $request->text,
             'post_id' => $request->post_id,    
         ]);
+
+        return redirect()->route('post.show',['post' => $request->post_id]);
     }
 
     public function update(Post $post, Comment $comment, Request $request){
