@@ -17,6 +17,7 @@
             await axios.get(`/api/getPostForUser/?search=${search.value}&&label=${label.value}&&userId=${props.user.id}`)
             .then( res =>{
                 console.log('searchPost',res.data)
+                console.log('search',search.value)
             } )
         } catch(e) {
             console.log('searchPost',e.message)

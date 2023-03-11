@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Comment;
+use Illuminate\Support\Facades\Log;
 
 class Post extends Model
 {
@@ -28,17 +29,7 @@ class Post extends Model
         } elseif(empty($search) && !empty($label)) {
             return $query->where('label','=',$label);
         }
-
-        // if(!empty($label) && $label != 'all'){
-        //     return $query->where('label','=',$label);
-        // }
     }
-
-    // public function scopeGetPostByLabel($query, $label = null){
-    //     if(!empty($label) || $label != 'all'){
-    //         return $query->where('label','=',$label);
-    //     }
-    // }
 
     public function scopeGetPostForParticularUser($query, $search = null, $label = null, $userId) {
         if(!empty($search) && !empty($label)){

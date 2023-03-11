@@ -46,7 +46,7 @@ class CommentController extends Controller
             'post_id' => $request->post_id,    
         ]);
 
-        return redirect()->route('post.show',['post' => $request->post_id]);
+        return to_route('post.show',['post' => $request->post_id]);
     }
 
     public function update(Post $post, Comment $comment, Request $request){
@@ -60,5 +60,6 @@ class CommentController extends Controller
         if (Auth::id() == $post->user_id || Auth::id() == $comment->user_id){
         $comment->delete();
         }
+        return to_route('post.show',['post' => $post->id]);
     }
 }

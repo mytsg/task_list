@@ -6,6 +6,8 @@ use Inertia\Inertia;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CommentController;
+use Illuminate\Http\Request;
+use App\Models\Post;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +49,12 @@ Route::get('/post/{post}/get_comments',[CommentController::class, 'getComments']
 Route::resource('post.comments',CommentController::class,[
     'only' => ['update', 'destroy'],
 ])->middleware(['auth', 'verified']);
+
+// Route::get('/getPostForUser',function (Request $request) {
+//     return Post::getPostForParticularUser($request->search, $request->label, $request->useId)
+//     ->select('id','title','user_id','deadline','label','created_at','updated_at','content')
+//     ->get();
+// })->middleware(['auth', 'verified']);
 
 Route::post('/post/comments', [CommentController::class, 'storeComments'])
 ->middleware(['auth', 'verified'])->name('storeComments');
