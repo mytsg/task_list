@@ -18,6 +18,7 @@
             .then( res =>{
                 console.log('searchPost',res.data)
                 console.log('search',search.value)
+                // props.posts = res.data
             } )
         } catch(e) {
             console.log('searchPost',e.message)

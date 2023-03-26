@@ -20,13 +20,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware('auth:sanctum')->get('/searchPost',function (Request $request) {
-    return Post::searchPost($request->search, $request->label)
+    return Post::searchPost($request->search, $request->label, $request->deadline)
         ->select('id','title','user_id','deadline','label','created_at','updated_at','content')
         ->get();
 });
 
 Route::middleware('auth:sanctum')->get('/getPostForUser',function (Request $request) {
-    return Post::getPostForParticularUser($request->search, $request->label, $request->useId)
+    return Post::getPostForUser($request->search, $request->label, $request->useId)
         ->select('id','title','user_id','deadline','label','created_at','updated_at','content')
         ->get();
 });

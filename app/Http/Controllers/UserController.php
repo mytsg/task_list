@@ -52,7 +52,7 @@ class UserController extends Controller
     {
         $userId = $user->id;
         $user = User::findOrFail($userId);
-        $posts = Post::getPostForParticularUser($request->search, $request->label, $user->id)
+        $posts = Post::getPostForUser($request->search, $request->label, $user->id)
                 ->select('id','title','user_id','deadline','label','created_at','updated_at','content')
                 ->orderBy('created_at','desc')
                 ->get();

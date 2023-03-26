@@ -13,18 +13,27 @@ const props = defineProps({
 })
 const search =ref('');
 const label = ref('');
+const deadlineFromChild = ref('');
+const deadline = ref('') //チェックボックス用
+
 const searchPost = async() => {
     try{
-        await axios.get(`/api/searchPost/?search=${search.value}&&label=${label.value}`)
+        await axios.get(`/api/searchPost/?search=${search.value}&label=${label.value}&deadline=${deadlineFromChild.value}`)
         .then( res => {
             console.log(res.data)
+            props.posts.value = res.data
         })
     } catch(e) {
         console.log(e.message)
     }
 }
 
-const deadline = ref('')
+const getDeadline = (e) => {
+    deadlineFromChild.value = e
+    console.log('e',e)
+    console.log('deadlineFromChild', deadlineFromChild.value)
+}
+
 </script>
 
 <template>
@@ -59,10 +68,9 @@ const deadline = ref('')
                     </div>
                     </form>
                 </div>
-                <Link :href="route('post.create')" class="text-white pt-6 bg-green-400 rounded">新しく作成する</Link>
             </div>
             <div v-show="deadline">
-                <searchByDeadline />
+                <searchByDeadline @deadline-up="getDeadline" />
             </div>
         </template>
 
