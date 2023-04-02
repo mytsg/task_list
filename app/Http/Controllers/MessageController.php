@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Message;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Response;
+use App\Events\MessageCreated;
 
 class MessageController extends Controller
 {
@@ -22,7 +23,8 @@ class MessageController extends Controller
     }
 
     public function getMessages(){
-        $messages = Message::get();
+        $messages = Message::with('user')
+        ->get();
         Log::debug('messages',[$messages]);
         return $messages;
     }
@@ -52,6 +54,8 @@ class MessageController extends Controller
         $message->user_id = $user->id;
         
         $message->save();
+        event(new MessageCreated($message));
+
         return $message;
     }
 

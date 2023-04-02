@@ -6,6 +6,7 @@ import { onMounted, reactive, ref, watch } from 'vue';
 import dayjs from 'dayjs'
 import searchByDeadline from '@/Components/searchByDeadline.vue'
 import { useRouter, useRoute, routerKey } from 'vue-router';
+import Echo from 'laravel-echo';
 
 // const props = defineProps({
 //     'messages': Array
@@ -20,7 +21,7 @@ const getMessages = () => {
         axios.get('/getMessages').then( res => {
         console.log('res.data', res.data)
         messages.value = res.data
-        // console.log('props.messages.value',props.messages.value)
+        console.log('messages',messages)
     })
 }
 
@@ -28,6 +29,7 @@ const send = () => {
     console.log('送信します')
     try{
         axios.post('message',form).then( res => {
+            form.text = ''
         getMessages()
         })
     } catch(e) {
@@ -36,10 +38,17 @@ const send = () => {
 }
 
 onMounted(() => {
-    axios.get('/getMessages').then( res => {
-    console.log('res.data', res.data)
-    messages.value = res.data
-    console.log('messages',messages)
+    // axios.get('/getMessages').then( res => {
+    // console.log('res.data', res.data)
+    // messages.value = res.data
+    // console.log('messages',messages)
+    // })
+    getMessages()
+
+    // pusherからデータを受け取る
+    window.Echo.channel('chat').listen('MessageCreated', (e) => {
+        console.log('pusherからデータを受け取る') //失敗
+        getMessages();
     })
 })
 
@@ -50,6 +59,7 @@ onMounted(() => {
         <div class="media-body ml-3">
             <div class="bg-light rounded py-2 px-3 mb-2">
                 <p class="text-small mb-0 text-dark">{{message.text}}</p>
+                <p class="text-small mb-0 text-blue">{{message.user.name}}</p>
             </div>
         </div>
     </div>
