@@ -7,6 +7,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\DirectMessageController;
 use Illuminate\Http\Request;
 use App\Models\Post;
 
@@ -65,5 +66,11 @@ Route::resource('/message',MessageController::class)
 
 Route::get('/getMessages',[MessageController::class, 'getMessages'])
 ->middleware(['auth', 'verified'])->name('getMessages');
+
+Route::resource('/directMessage',DirectMessageController::class)
+->middleware(['auth','verified']);
+
+Route::get('/getDirectMessage',[DirectMessageController::class,'getDirectMessage'])
+->middleware(['auth', 'verified'])->name('getDirectMessage');
 
 require __DIR__.'/auth.php';

@@ -1,16 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
-use Inertia\Inertia;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Message;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Response;
-use App\Events\MessageCreated;
+use App\Models\User;
+use Inertia\Inertia;
+use App\Models\DirectMessage;
+use App\Events\DirectMessageCreated;
 
-class MessageController extends Controller
+class DirectMessageController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,13 +18,16 @@ class MessageController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Message/Index');
-    }
+        $user = Auth::user();
 
-    public function getMessages(){
-        $messages = Message::with('user')
-        ->get();
-        return $messages;
+        // ログイン者以外のユーザーを取得
+        $users = User::where('id','<>',$user->id)
+                ->select('id','name')
+                ->get();
+        
+        return Inertia::render('DirectMessage/Index',[
+            'users' => $users
+        ]); 
     }
 
     /**
@@ -47,15 +49,17 @@ class MessageController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        
-        $message = new Message();
-        $message->message = $request->message;
-        $message->user_id = $user->id;
-        
-        $message->save();
-        event(new MessageCreated($message));
 
-        return $message;
+        $directMessage = new DirectMessage();
+        $directMessage->message = $request->message;
+        $directMessage->send = $user->id;
+        $directMessage->recieve = $request->recieve;
+
+        $directMessage->save();
+        event(new DirectMessageCreated($directMessage));
+
+        // ここにDM送信したとき用のイベントを書く
+        return $directMessage;
     }
 
     /**
@@ -66,7 +70,26 @@ class MessageController extends Controller
      */
     public function show($id)
     {
-        //
+        $opponent = User::findOrFail($id);
+        $loginUser = Auth::user();
+        // dd($user);
+
+        return Inertia::render('DirectMessage/Show',[
+            'opponent' => $opponent,
+            'loginUser' => $loginUser,
+        ]);
+    }
+
+    public function getDirectMessage(Request $request){
+        // dd($request);
+        $send = $request->send;
+        $recieve = $request->recieve;
+
+        $directMessages = DirectMessage::where([['send',$send],['recieve',$recieve]])
+                        ->orWhere([['send',$recieve],['recieve',$send]])
+                        ->get();
+                        
+        return $directMessages;
     }
 
     /**
@@ -102,4 +125,5 @@ class MessageController extends Controller
     {
         //
     }
+
 }

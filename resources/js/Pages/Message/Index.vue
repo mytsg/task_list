@@ -47,7 +47,7 @@ onMounted(() => {
 
     // pusherからデータを受け取る
     window.Echo.channel('chat').listen('MessageCreated', (e) => {
-        console.log('pusherからデータを受け取る') //失敗
+        console.log('pusherからデータを受け取る') 
         getMessages();
     })
 })
