@@ -74,9 +74,15 @@ class DirectMessageController extends Controller
         $loginUser = Auth::user();
         // dd($user);
 
+        $loginUserId = Auth::id();
+        $allUsers = User::where('id','<>',$loginUserId)
+            ->select('id','name')
+            ->get();
+
         return Inertia::render('DirectMessage/Show',[
             'opponent' => $opponent,
             'loginUser' => $loginUser,
+            'allUsers' => $allUsers,
         ]);
     }
 

@@ -26,7 +26,7 @@ console.log('props.users',props.users)
 
         <section class="text-gray-600 body-font">
             <div class="container px-5 mx-auto">
-                <div v-for="user in props.users" :key="user.id" class="flex items-center lg:w-3/5 mx-auto border-b pb-10 pt-10 mb-10 border-gray-200 sm:flex-row flex-col">
+                <div v-for="user in props.users" :key="user.id" class="flex items-center mx-auto border-b pb-10 pt-10 mb-10 border-gray-200 sm:flex-row flex-col">
                     <div class="mt-4 w-20 sm:mr-10 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 flex-shrink-0">
                     </div>
                     <div class="flex-grow text-left sm:mt-0">

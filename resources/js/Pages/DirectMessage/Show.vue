@@ -12,6 +12,7 @@ import Echo from 'laravel-echo';
 const props = defineProps({
     'opponent': Object,
     'loginUser': Object,
+    'allUsers': Array,
 })
 console.log('props.opponent.id',props.opponent.id)
 
@@ -46,7 +47,7 @@ const send = () => {
     } catch(e) {
         console.log(e.message)
     }
-} 
+}
 
 onMounted(() => {
     getDirectMessage()
@@ -68,25 +69,44 @@ onMounted(() => {
             </h2>
         </template>
 
-        <!-- ハンバーガーメニューで表示・非表示を切り替えたい -->
-        <!-- <DirectMessageList :users = props.users /> -->
+        <section class="text-gray-600 body-font">
+            <div class="flex w-full h-full">
+                <div class="">
+                    <DirectMessageList :users="props.allUsers" />
+                </div>
+                <div class="bg-white mt-4 w-2/3">
+                    <div class="text-center" v-for="message in directMessages.value" :key="message.id">
+                        <template v-if="message.send == props.loginUser.id">
+                            <div class="mr-3 text-right">
+                                <div class="inline-block my-1 text-black bg-green-300 rounded media-body">
+                                    <div class="inline-block bg-light rounded-full py-1 px-3 mb-2">
+                                        <p class="text-small mb-0 text-dark">{{message.message}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div class="ml-3 text-left">
+                                <div class="inline-block my-1 text-black bg-gray-300 rounded media-body">
+                                    <div class="inline-block bg-light rounded-full py-1 px-3">
+                                        <p class="text-small mb-0 text-dark">{{message.message}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
 
-        <div v-for="message in directMessages.value" :key="message.id">
-            <div class="media-body ml-3">
-                <div class="bg-light rounded py-2 px-3 mb-2">
-                    <p class="text-small mb-0 text-dark">{{message.message}}</p>
+                    <form enctype="multipart/form-data" @submit.prevent="send" class="text-center bg-light border-gray-500">
+                        <div class="mt-8 py-4 border-t-2 border-gray-200 flex justify-between">
+                            <input type="text" placeholder="Type a message" class="inline-block border-black w-2/3 rounded py-4" v-model="form.message">
+                            <div class="items-center">
+                                <button type="submit" class="inline-block bg-indigo-500 px-4 py-4 rounded text-white">送信する</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-        </div>
-
-        <form enctype="multipart/form-data" @submit.prevent="send" class="bg-light border-gray-500">
-            <div class="input-group">
-                <input type="text" placeholder="Type a message" aria-describedby="button-addon2" class="form-control rounded-0 border-0 py-4 bg-light" v-model="form.message">
-                <div class="input-group-append">
-                    <button id="button-addon2" type="submit" class="btn btn-link">送信する</button>
-                </div>
-            </div>
-        </form>
+        </section>
         
     </BreezeAuthenticatedLayout>
 </template>

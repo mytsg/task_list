@@ -32,8 +32,8 @@ Route::middleware('auth:sanctum')->get('/getPostForUser',function (Request $requ
         ->get();
 });
 
-Route::middleware('auth:sanctum')->get('/getDirectMessage',function(Request $request) {
-    \Log::debug('request',[$request->send]);
+Route::middleware('auth:sanctum')->get('/getDirectMessage',function(Request $request) { //paramsで持たせる変数はrequestで受け取る
+    // \Log::debug('request',[$request->send]);
     return DirectMessage::where([['send',$request->send],['recieve',$request->recieve]])
     ->orWhere([['send',$request->recieve],['recieve',$request->send]])
     ->get();
