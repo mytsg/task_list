@@ -25,7 +25,6 @@ watch(deadline, () => {
             <span class="title-font font-medium text-indigo-600 p-1 pr-4 rounded">期限が今日から</span>
             <input class="px-4" type="date" name="deadline" v-model="deadline">
             <span class="title-font font-medium text-indigo-600 p-1 pl-4 rounded">までを表示</span>
-            <!-- <button class="ml-1 bg-indigo-400 p-1 text-white rounded btn btn-sm btn-primary">表示</button> -->
           </form>
         </div>
     </section>

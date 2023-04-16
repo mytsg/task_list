@@ -5,20 +5,30 @@ import axios from 'axios';
 import { onMounted, reactive, ref, watch } from 'vue';
 import dayjs from 'dayjs'
 import searchByDeadline from '@/Components/searchByDeadline.vue'
-import { useRouter, useRoute, routerKey } from 'vue-router';
 
 const props = defineProps({
     'posts': Array,
     'users' : Array,
 })
+// const users = reactive({})
+// const posts = reactive({})
+
 const search =ref('');
 const label = ref('');
 const deadlineFromChild = ref('');
 const deadline = ref('') //チェックボックス用
 
+
 const searchPost = async() => {
     try{
-        await axios.get(`/api/searchPost/?search=${search.value}&label=${label.value}&deadline=${deadlineFromChild.value}`)
+        console.log('searchPost deadline',deadlineFromChild.value)
+        await axios.get('/api/searchPost/',{
+            params: {
+                search: search.value,
+                label: search.value,
+                deadline: deadlineFromChild.value,
+            }
+        })
         .then( res => {
             console.log(res.data)
             props.posts.value = res.data
@@ -30,9 +40,19 @@ const searchPost = async() => {
 
 const getDeadline = (e) => {
     deadlineFromChild.value = e
-    console.log('e',e)
+    // console.log('e',e)
     console.log('deadlineFromChild', deadlineFromChild.value)
 }
+
+// onMounted(() => {
+//     console.log('onmounted')
+//     axios.get('/getAllPosts')
+//     .then( res => {
+//         console.log('getAllPosts', res.data)
+//         users.value = res.data.users
+//         posts.value = res.data.posts
+//     })
+// })
 
 </script>
 

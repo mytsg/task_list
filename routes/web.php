@@ -73,4 +73,7 @@ Route::resource('/directMessage',DirectMessageController::class)
 Route::get('/getDirectMessage',[DirectMessageController::class,'getDirectMessage'])
 ->middleware(['auth', 'verified'])->name('getDirectMessage');
 
+// Route::get('/getAllPosts',[PostController::class,'getAllPosts'])
+// ->middleware(['auth', 'verified']);
+
 require __DIR__.'/auth.php';

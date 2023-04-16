@@ -21,6 +21,8 @@ class Post extends Model
     }
 
     public function scopeSearchPost($query, $search = null, $label = null, $deadline = null){
+        \Log::debug('deadline scope',[$deadline]);
+
         // if(!empty($search) && !empty($label)){
         //     return $query->where('title','like',"%".$search."%")
         //     ->where('label','=',$label);
@@ -30,22 +32,32 @@ class Post extends Model
         //     return $query->where('label','=',$label);
         // }
 
+        // if($deadline){
+        //     \Log::debug('if文');
+        //     return $query->whereDate('deadline','<',$deadline);
+        // } else {
+        //     \Log::debug('else');
+        //     return $query;
+        // }
+
+        // \Log::debug('searchPostの処理');
+
         if(!empty($deadline)){
-            // return $query->whereDate('deadline','<',$deadline);
-            // Log::debug($deadline);
+            \Log::debug('deadlineは空ではないです');
             if(!empty($search) && !empty($label)){
+                \Log::debug('deadline if',[$deadline]);
                 return $query->where('title','like',"%".$search."%")
                 ->where('label','=',$label)
-                ->whereDate('deadline','=',$deadline);
+                ->whereDate('deadline','<',$deadline);
             } elseif(!empty($search) && empty($label)){
                 return $query->where('title','like',"%".$search."%")
-                ->whereDate('deadline','=',$deadline);
+                ->whereDate('deadline','<',$deadline);
             } elseif(empty($search) && !empty($label)) {
                 return $query->where('label','=',$label)
-                ->whereDate('deadline','=',$deadline);
+                ->whereDate('deadline','<',$deadline);
             }
-            Log::debug('deadlineは空ではないです');
         } else {
+            \Log::debug('deadlineは空です');
             if(!empty($search) && !empty($label)){
                 return $query->where('title','like',"%".$search."%")
                 ->where('label','=',$label);
@@ -54,7 +66,6 @@ class Post extends Model
             } elseif(empty($search) && !empty($label)) {
                 return $query->where('label','=',$label);
             }
-            Log::debug('deadlineは空です');
         }
     }
 

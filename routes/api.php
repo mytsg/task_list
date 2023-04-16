@@ -21,10 +21,18 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware('auth:sanctum')->get('/searchPost',function (Request $request) {
+    \Log::debug('api searchpost request deadline', [$request->deadline]);
     return Post::searchPost($request->search, $request->label, $request->deadline)
         ->select('id','title','user_id','deadline','label','created_at','updated_at','content')
         ->get();
 });
+
+// Route::middleware('auth:sanctum')->get('/getPosts',function (Request $request) {
+//     \Log::debug('api getposts request deadline', [$request->deadline]);
+//     return Post::searchPost($request->search, $request->label, $request->deadline)
+//         ->select('id','title','user_id','deadline','label','created_at','updated_at','content')
+//         ->get();
+// });
 
 Route::middleware('auth:sanctum')->get('/getPostForUser',function (Request $request) {
     return Post::getPostForUser($request->search, $request->label, $request->useId)

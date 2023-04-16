@@ -8,10 +8,6 @@ import searchByDeadline from '@/Components/searchByDeadline.vue'
 import { useRouter, useRoute, routerKey } from 'vue-router';
 import Echo from 'laravel-echo';
 
-// const props = defineProps({
-//     'messages': Array
-// })
-
 const form = reactive({
     text: null,
 })
@@ -38,16 +34,10 @@ const send = () => {
 }
 
 onMounted(() => {
-    // axios.get('/getMessages').then( res => {
-    // console.log('res.data', res.data)
-    // messages.value = res.data
-    // console.log('messages',messages)
-    // })
     getMessages()
 
-    // pusherからデータを受け取る
     window.Echo.channel('chat').listen('MessageCreated', (e) => {
-        console.log('pusherからデータを受け取る') 
+        console.log('pusher') 
         getMessages();
     })
 })

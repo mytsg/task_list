@@ -31,10 +31,6 @@ class CommentController extends Controller
             'comments' => $comments,
             'users' => $users,
         ];
-
-        // return response()->json([
-        //     'comments' => $comments,
-        // ], Response::HTTP_OK);
     }
 
     public function storeComments(Request $request){

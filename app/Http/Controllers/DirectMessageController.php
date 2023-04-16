@@ -58,7 +58,6 @@ class DirectMessageController extends Controller
         $directMessage->save();
         event(new DirectMessageCreated($directMessage));
 
-        // ここにDM送信したとき用のイベントを書く
         return $directMessage;
     }
 

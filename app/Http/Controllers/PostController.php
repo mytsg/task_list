@@ -19,6 +19,8 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
+        \Log::debug('index');
+
         $posts = Post::searchPost($request->search,$request->label,$request->deadline)
             ->select('id','title','user_id','label','created_at','updated_at','content','deadline')
             ->orderBy('created_at','desc')
@@ -32,22 +34,57 @@ class PostController extends Controller
             }
         }
 
-        // dd($users);
-        // foreach($posts as $post){
-        //     $m = getMonthFromTimestamp($post->created_at);
-        //     $d = getDateFromTimestamp($post->created_at);
-        // }
-        // $post = Post::findOrFail(1);
-        // $timestamp = $post->created_at;
-        // $m = ViewHelper::getMonthFromTimestamp($timestamp);
-
-        // dd($m);
-
         return Inertia::render('Post/Index',[
             'posts' => $posts,
             'users' => $users,
         ]);
     }
+
+    // public function getAllPosts()
+    // {
+    //     $posts = Post::select('id','title','user_id','label','created_at','updated_at','content','deadline')
+    //         ->orderBy('created_at','desc')
+    //         ->get();
+
+    //     $users = [];
+
+    //     foreach($posts as $post){
+    //         if(!in_array($post->user, $users)){
+    //             array_push($users,$post->user);
+    //         }
+    //     }
+
+    //     return [
+    //         'posts' => $posts,
+    //         'users' => $users,
+    //     ];
+    // }
+
+    // public function index()
+    // {
+    //     return Inertia::render('Post/Index');
+    // }
+
+    // public function getPosts(Request $request)
+    // {
+    //     $posts = Post::searchPost($request->search,$request->label,$request->deadline)
+    //         ->select('id','title','user_id','label','created_at','updated_at','content','deadline')
+    //         ->orderBy('created_at','desc')
+    //         ->get();
+
+    //     $users = [];
+
+    //     foreach($posts as $post){
+    //         if(!in_array($post->user, $users)){
+    //             array_push($users,$post->user);
+    //         }
+    //     }
+
+    //     return [
+    //         'posts' => $posts,
+    //         'users' => $users,
+    //     ];
+    // }
 
     /**
      * Show the form for creating a new resource.

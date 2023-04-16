@@ -36,7 +36,6 @@ console.log(form)
 
 const storeComment = () => {
     Inertia.post('/post/comments',form)
-    // window.location.reload();
 }
 
 </script>

@@ -36,6 +36,9 @@ const showingNavigationDropdown = ref(false);
                                 <BreezeNavLink :href="route('post.create')" :active="route().current('post.create')">
                                     新規作成
                                 </BreezeNavLink>
+                                <BreezeNavLink :href="route('directMessage.index')" :active="route().current('directMessage.index')">
+                                    メッセージ
+                                </BreezeNavLink>
                             </div>
                         </div>
 
@@ -86,6 +89,9 @@ const showingNavigationDropdown = ref(false);
                             タスク一覧
                         </BreezeResponsiveNavLink>
                         <BreezeResponsiveNavLink :href="route('post.create')" :active="route().current('post.create')">
+                            新規作成
+                        </BreezeResponsiveNavLink>
+                        <BreezeResponsiveNavLink :href="route('directMessage.index')" :active="route().current('directMessage.index')">
                             新規作成
                         </BreezeResponsiveNavLink>
                     </div>
