@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\Post;
+use App\Models\DirectMessage;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,13 +21,20 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware('auth:sanctum')->get('/searchPost',function (Request $request) {
-    return Post::searchPost($request->search, $request->label)
+    \Log::debug('api searchpost request deadline', [$request->deadline]);
+    return Post::searchPost($request->search, $request->label, $request->deadline)
         ->select('id','title','user_id','deadline','label','created_at','updated_at','content')
         ->get();
 });
 
 Route::middleware('auth:sanctum')->get('/getPostForUser',function (Request $request) {
-    return Post::getPostForParticularUser($request->search, $request->label, $request->useId)
+    return Post::getPostForUser($request->search, $request->label, $request->useId)
         ->select('id','title','user_id','deadline','label','created_at','updated_at','content')
         ->get();
+});
+
+Route::middleware('auth:sanctum')->get('/getDirectMessage',function(Request $request) { 
+    return DirectMessage::where([['send',$request->send],['recieve',$request->recieve]])
+    ->orWhere([['send',$request->recieve],['recieve',$request->send]])
+    ->get();
 });

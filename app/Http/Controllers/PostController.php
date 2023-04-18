@@ -19,8 +19,10 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
-        $posts = Post::searchPost($request->search,$request->label)
-            ->select('id','title','user_id','deadline','label','created_at','updated_at','content','deadline')
+        \Log::debug('index request',[$request->deadline]);
+
+        $posts = Post::searchPost($request->search,$request->label,$request->deadline)
+            ->select('id','title','user_id','label','created_at','updated_at','content','deadline')
             ->orderBy('created_at','desc')
             ->get();
 
@@ -32,22 +34,12 @@ class PostController extends Controller
             }
         }
 
-        // dd($users);
-        // foreach($posts as $post){
-        //     $m = getMonthFromTimestamp($post->created_at);
-        //     $d = getDateFromTimestamp($post->created_at);
-        // }
-        // $post = Post::findOrFail(1);
-        // $timestamp = $post->created_at;
-        // $m = ViewHelper::getMonthFromTimestamp($timestamp);
-
-        // dd($m);
-
         return Inertia::render('Post/Index',[
             'posts' => $posts,
             'users' => $users,
         ]);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -136,6 +128,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+        return to_route('post.index');
     }
 }

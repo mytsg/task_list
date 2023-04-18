@@ -1,15 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Inertia\Inertia;
-use App\Models\User;
-use Illuminate\Http\Request;
-use App\Http\Requests\StorePostRequest;
-use App\Http\Requests\UpdatePostRequest;
-use App\Models\Post;
 
-class UserController extends Controller
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Message;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Response;
+use App\Events\MessageCreated;
+
+class MessageController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +19,13 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Message/Index');
+    }
+
+    public function getMessages(){
+        $messages = Message::with('user')
+        ->get();
+        return $messages;
     }
 
     /**
@@ -39,37 +46,36 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = Auth::user();
+        
+        $message = new Message();
+        $message->message = $request->message;
+        $message->user_id = $user->id;
+        
+        $message->save();
+        event(new MessageCreated($message));
+
+        return $message;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\User  $user
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user, Request $request)
+    public function show($id)
     {
-        $userId = $user->id;
-        $user = User::findOrFail($userId);
-        $posts = Post::getPostForUser($request->search, $request->label, $user->id, $request->deadline)
-                ->select('id','title','user_id','deadline','label','created_at','updated_at','content')
-                ->orderBy('created_at','desc')
-                ->get();
-
-        return Inertia::render('User/Show',[
-            'posts' => $posts,
-            'user'=> $user
-        ]);
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\User  $user
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function edit($id)
     {
         //
     }
@@ -78,10 +84,10 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\User  $user
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -89,10 +95,10 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\User  $user
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy($id)
     {
         //
     }
