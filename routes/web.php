@@ -42,8 +42,9 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::resource('user',UserController::class)
-->middleware(['auth','verified']);
+Route::resource('user',UserController::class,[
+    'only' => ['show']
+])->middleware(['auth','verified']);
 
 Route::get('/post/{post}/get_comments',[CommentController::class, 'getComments'])
 ->middleware(['auth', 'verified'])->name('getComments');
@@ -51,12 +52,6 @@ Route::get('/post/{post}/get_comments',[CommentController::class, 'getComments']
 Route::resource('post.comments',CommentController::class,[
     'only' => ['update', 'destroy'],
 ])->middleware(['auth', 'verified']);
-
-// Route::get('/getPostForUser',function (Request $request) {
-//     return Post::getPostForParticularUser($request->search, $request->label, $request->useId)
-//     ->select('id','title','user_id','deadline','label','created_at','updated_at','content')
-//     ->get();
-// })->middleware(['auth', 'verified']);
 
 Route::post('/post/comments', [CommentController::class, 'storeComments'])
 ->middleware(['auth', 'verified'])->name('storeComments');
@@ -72,8 +67,5 @@ Route::resource('/directMessage',DirectMessageController::class)
 
 Route::get('/getDirectMessage',[DirectMessageController::class,'getDirectMessage'])
 ->middleware(['auth', 'verified'])->name('getDirectMessage');
-
-// Route::get('/getAllPosts',[PostController::class,'getAllPosts'])
-// ->middleware(['auth', 'verified']);
 
 require __DIR__.'/auth.php';

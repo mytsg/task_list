@@ -5,59 +5,33 @@ import axios from 'axios';
 import { onMounted, reactive, ref, watch } from 'vue';
 import dayjs from 'dayjs'
 import searchByDeadline from '@/Components/searchByDeadline.vue'
+import { Inertia } from '@inertiajs/inertia';
 
-const props = defineProps({
+defineProps({
     'posts': Array,
     'users' : Array,
 })
-// const users = reactive({})
-// const posts = reactive({})
 
 const search =ref('');
 const label = ref('');
 const deadlineFromChild = ref('');
-const deadline = ref('') //チェックボックス用
+const isDeadline = ref('') //チェックボックス用
+const deadline = ref('') //input用
 
 
-const searchPost = async() => {
-    try{
-        console.log('searchPost deadline',deadlineFromChild.value)
-        await axios.get('/api/searchPost/',{
-            params: {
-                search: search.value,
-                label: search.value,
-                deadline: deadlineFromChild.value,
-            }
-        })
-        .then( res => {
-            console.log(res.data)
-            props.posts.value = res.data
-        })
-    } catch(e) {
-        console.log(e.message)
-    }
+const searchPost = () => {
+    console.log('deadline inertia',deadline.value)
+    Inertia.get(route('post.index',{
+        search: search.value,
+        label: label.value,
+        deadline: deadline.value,
+    }))
 }
-
-const getDeadline = (e) => {
-    deadlineFromChild.value = e
-    // console.log('e',e)
-    console.log('deadlineFromChild', deadlineFromChild.value)
-}
-
-// onMounted(() => {
-//     console.log('onmounted')
-//     axios.get('/getAllPosts')
-//     .then( res => {
-//         console.log('getAllPosts', res.data)
-//         users.value = res.data.users
-//         posts.value = res.data.posts
-//     })
-// })
 
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="タスク一覧" />
 
     <BreezeAuthenticatedLayout>
         <template #header>
@@ -65,8 +39,8 @@ const getDeadline = (e) => {
                 タスク一覧
             </h2>
             <div class="pt-4">
-                <label for="deadline">
-                    <input id="deadline" class="pl-4" type="checkbox" name="deadline" v-model="deadline">期限で絞り込む
+                <label for="isDeadline">
+                    <input id="isDeadline" class="pl-4" type="checkbox" name="isDeadline" v-model="isDeadline">期限で絞り込む
                 </label>
             </div>
             <div class="flex justify-between">
@@ -84,20 +58,27 @@ const getDeadline = (e) => {
                                 <option value="done">Done</option>
                             </select>
                         </div>
-                        <button @click="searchPost" class="text-white ml-4 p-2 bg-indigo-400 rounded">検索する</button>
+                        <button type="button" @click="searchPost" class="text-white ml-4 p-2 bg-indigo-400 rounded">検索する</button>
                     </div>
                     </form>
                 </div>
             </div>
-            <div v-show="deadline">
-                <searchByDeadline @deadline-up="getDeadline" />
-            </div>
+            <template v-if="isDeadline">
+                <section class="text-gray-600 body-font">
+                    <div class="container my-4 py-4 px-5 border-gray-700 border-t-2 mx-auto">
+                    <h2 class="tracking-widest text-xl title-font font-bold text-black mb-1">期間を指定して検索する</h2>
+                        <span class="title-font font-medium text-indigo-600 p-1 pr-4 rounded">期限が今日から</span>
+                        <input class="px-4" type="date" name="deadline" v-model="deadline">
+                        <span class="title-font font-medium text-indigo-600 p-1 pl-4 rounded">までを表示</span>
+                    </div>
+                </section>
+            </template>
         </template>
 
     <section class="text-gray-600 body-font">
         <div class="container px-5 py-24 mx-auto">
             <div class="flex flex-wrap -mx-4 -my-8 ">
-                <div v-for="post in props.posts" class="py-8 px-4 lg:w-1/3 border-2 border-gray bg-white">
+                <div v-for="post in posts" class="py-8 px-4 lg:w-1/3 border-2 border-gray bg-white">
                     <a :href="route('post.show',{ post: post.id })">
                     <div class="h-full flex items-start">
                         <div class="flex-grow pl-6">
@@ -105,7 +86,7 @@ const getDeadline = (e) => {
                             <h1 class="title-font text-xl font-medium text-gray-900 mb-3">{{ post.title }}</h1>
                             <p class="leading-relaxed mb-5">{{ post.content }}</p>
                             <a class="items-center">
-                                <div v-for="user in props.users">
+                                <div v-for="user in users">
                                     <span v-if="user.id == post.user_id" class="flex-grow flex flex-col pl-3 py-3">
                                         <span class="title-font font-medium text-gray-900">ユーザー名：{{ user.name }}</span>
                                     </span>

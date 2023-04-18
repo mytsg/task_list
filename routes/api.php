@@ -27,21 +27,13 @@ Route::middleware('auth:sanctum')->get('/searchPost',function (Request $request)
         ->get();
 });
 
-// Route::middleware('auth:sanctum')->get('/getPosts',function (Request $request) {
-//     \Log::debug('api getposts request deadline', [$request->deadline]);
-//     return Post::searchPost($request->search, $request->label, $request->deadline)
-//         ->select('id','title','user_id','deadline','label','created_at','updated_at','content')
-//         ->get();
-// });
-
 Route::middleware('auth:sanctum')->get('/getPostForUser',function (Request $request) {
     return Post::getPostForUser($request->search, $request->label, $request->useId)
         ->select('id','title','user_id','deadline','label','created_at','updated_at','content')
         ->get();
 });
 
-Route::middleware('auth:sanctum')->get('/getDirectMessage',function(Request $request) { //paramsで持たせる変数はrequestで受け取る
-    // \Log::debug('request',[$request->send]);
+Route::middleware('auth:sanctum')->get('/getDirectMessage',function(Request $request) { 
     return DirectMessage::where([['send',$request->send],['recieve',$request->recieve]])
     ->orWhere([['send',$request->recieve],['recieve',$request->send]])
     ->get();

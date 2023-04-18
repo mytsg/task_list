@@ -29,7 +29,7 @@
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="投稿を新規作成" />
 
     <BreezeAuthenticatedLayout>
         <template #header>

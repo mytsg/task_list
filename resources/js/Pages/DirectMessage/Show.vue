@@ -5,7 +5,6 @@ import { Head, Link } from '@inertiajs/inertia-vue3';
 import axios from 'axios';
 import { onMounted, reactive, ref, watch } from 'vue';
 import dayjs from 'dayjs'
-import searchByDeadline from '@/Components/searchByDeadline.vue'
 import { useRouter, useRoute, routerKey } from 'vue-router';
 import Echo from 'laravel-echo';
 
@@ -52,9 +51,8 @@ const send = () => {
 onMounted(() => {
     getDirectMessage()
 
-    // pusherからデータを受け取る
     window.Echo.channel('direct-message').listen('DirectMessageCreated', (e) => {
-        console.log('pusherからデータを受け取る') 
+        console.log('pusher') 
         getDirectMessage();
     })
 })

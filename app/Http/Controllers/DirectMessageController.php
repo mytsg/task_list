@@ -71,7 +71,6 @@ class DirectMessageController extends Controller
     {
         $opponent = User::findOrFail($id);
         $loginUser = Auth::user();
-        // dd($user);
 
         $loginUserId = Auth::id();
         $allUsers = User::where('id','<>',$loginUserId)

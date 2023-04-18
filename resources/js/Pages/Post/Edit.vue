@@ -28,7 +28,7 @@
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="投稿編集" />
 
     <BreezeAuthenticatedLayout>
         <template #header>

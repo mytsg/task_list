@@ -22,25 +22,7 @@ class Post extends Model
 
     public function scopeSearchPost($query, $search = null, $label = null, $deadline = null){
         \Log::debug('deadline scope',[$deadline]);
-
-        // if(!empty($search) && !empty($label)){
-        //     return $query->where('title','like',"%".$search."%")
-        //     ->where('label','=',$label);
-        // } elseif(!empty($search) && empty($label)){
-        //     return $query->where('title','like',"%".$search."%");
-        // } elseif(empty($search) && !empty($label)) {
-        //     return $query->where('label','=',$label);
-        // }
-
-        // if($deadline){
-        //     \Log::debug('if文');
-        //     return $query->whereDate('deadline','<',$deadline);
-        // } else {
-        //     \Log::debug('else');
-        //     return $query;
-        // }
-
-        // \Log::debug('searchPostの処理');
+        \Log::debug('search scope',[$search]);
 
         if(!empty($deadline)){
             \Log::debug('deadlineは空ではないです');
@@ -48,13 +30,15 @@ class Post extends Model
                 \Log::debug('deadline if',[$deadline]);
                 return $query->where('title','like',"%".$search."%")
                 ->where('label','=',$label)
-                ->whereDate('deadline','<',$deadline);
+                ->whereDate('deadline','<=',$deadline);
             } elseif(!empty($search) && empty($label)){
                 return $query->where('title','like',"%".$search."%")
-                ->whereDate('deadline','<',$deadline);
+                ->whereDate('deadline','<=',$deadline);
             } elseif(empty($search) && !empty($label)) {
                 return $query->where('label','=',$label)
-                ->whereDate('deadline','<',$deadline);
+                ->whereDate('deadline','<=',$deadline);
+            } else {
+                return $query->whereDate('deadline','<=',$deadline);
             }
         } else {
             \Log::debug('deadlineは空です');
@@ -69,19 +53,39 @@ class Post extends Model
         }
     }
 
-    public function scopeGetPostForUser($query, $search = null, $label = null, $userId) {
-        if(!empty($search) && !empty($label)){
-            return $query->where('title','like',"%".$search."%")
-            ->where('label','=',$label)
-            ->where('user_id','=',$userId);
-        } elseif(!empty($search) && empty($label)){
-            return $query->where('title','like',"%".$search."%")
-            ->where('user_id','=',$userId);
-        } elseif(empty($search) && !empty($label)) {
-            return $query->where('label','=',$label)
-            ->where('user_id','=',$userId);
+    public function scopeGetPostForUser($query, $search = null, $label = null, $userId, $deadline = null) {
+        if($deadline) {
+            if(!empty($search) && !empty($label)){
+                return $query->where('title','like',"%".$search."%")
+                ->where('label','=',$label)
+                ->where('user_id','=',$userId)
+                ->whereDate('deadline','<=',$deadline);
+            } elseif(!empty($search) && empty($label)){
+                return $query->where('title','like',"%".$search."%")
+                ->where('user_id','=',$userId)
+                ->whereDate('deadline','<=',$deadline);
+            } elseif(empty($search) && !empty($label)) {
+                return $query->where('label','=',$label)
+                ->where('user_id','=',$userId)
+                ->whereDate('deadline','<=',$deadline);
+            } else {
+                return $query->where('user_id','=',$userId)
+                ->whereDate('deadline','<=',$deadline);   
+            }
         } else {
-            return $query->where('user_id','=',$userId);   
+            if(!empty($search) && !empty($label)){
+                return $query->where('title','like',"%".$search."%")
+                ->where('label','=',$label)
+                ->where('user_id','=',$userId);
+            } elseif(!empty($search) && empty($label)){
+                return $query->where('title','like',"%".$search."%")
+                ->where('user_id','=',$userId);
+            } elseif(empty($search) && !empty($label)) {
+                return $query->where('label','=',$label)
+                ->where('user_id','=',$userId);
+            } else {
+                return $query->where('user_id','=',$userId);   
+            }
         }
     }
 
