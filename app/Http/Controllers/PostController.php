@@ -17,26 +17,21 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index(Request $request)
     {
         \Log::debug('index request',[$request->deadline]);
 
-        $posts = Post::searchPost($request->search,$request->label,$request->deadline)
+        $posts = Post::with('user')
+            ->searchPost($request->search,$request->label,$request->deadline)
             ->select('id','title','user_id','label','created_at','updated_at','content','deadline')
             ->orderBy('created_at','desc')
             ->get();
 
-        $users = [];
-
-        foreach($posts as $post){
-            if(!in_array($post->user, $users)){
-                array_push($users,$post->user);
-            }
-        }
+        // dd($posts);
 
         return Inertia::render('Post/Index',[
             'posts' => $posts,
-            'users' => $users,
         ]);
     }
 

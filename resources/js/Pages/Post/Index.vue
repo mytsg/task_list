@@ -7,9 +7,9 @@ import dayjs from 'dayjs'
 import searchByDeadline from '@/Components/searchByDeadline.vue'
 import { Inertia } from '@inertiajs/inertia';
 
-defineProps({
+const props = defineProps({
     'posts': Array,
-    'users' : Array,
+    // 'users' : Array,
 })
 
 const search =ref('');
@@ -17,7 +17,6 @@ const label = ref('');
 const deadlineFromChild = ref('');
 const isDeadline = ref('') //チェックボックス用
 const deadline = ref('') //input用
-
 
 const searchPost = () => {
     console.log('deadline inertia',deadline.value)
@@ -27,6 +26,10 @@ const searchPost = () => {
         deadline: deadline.value,
     }))
 }
+
+// onMounted(() => {
+//     console.log(props.posts)
+// })
 
 </script>
 
@@ -78,7 +81,7 @@ const searchPost = () => {
     <section class="text-gray-600 body-font">
         <div class="container px-5 py-24 mx-auto">
             <div class="flex flex-wrap -mx-4 -my-8 ">
-                <div v-for="post in posts" class="py-8 px-4 lg:w-1/3 border-2 border-gray bg-white">
+                <div v-for="post in props.posts" class="py-8 px-4 lg:w-1/3 border-2 border-gray bg-white">
                     <a :href="route('post.show',{ post: post.id })">
                     <div class="h-full flex items-start">
                         <div class="flex-grow pl-6">
@@ -86,11 +89,9 @@ const searchPost = () => {
                             <h1 class="title-font text-xl font-medium text-gray-900 mb-3">{{ post.title }}</h1>
                             <p class="leading-relaxed mb-5">{{ post.content }}</p>
                             <a class="items-center">
-                                <div v-for="user in users">
-                                    <span v-if="user.id == post.user_id" class="flex-grow flex flex-col pl-3 py-3">
-                                        <span class="title-font font-medium text-gray-900">ユーザー名：{{ user.name }}</span>
-                                    </span>
-                                </div>
+                                <span class="flex-grow flex flex-col pl-3 py-3">
+                                    <span class="title-font font-medium text-gray-900">ユーザー名：{{ post.user.name }}</span>
+                                </span>
                                 <span class="flex-grow flex flex-col pl-3 pb-3">
                                     <span class="title-font font-medium text-gray-900">作成日：{{ dayjs(post.created_at).format('YYYY年MM月DD日') }}</span>
                                 </span>

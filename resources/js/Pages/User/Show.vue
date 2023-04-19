@@ -89,6 +89,9 @@ const getPostForUser = () => {
                                     <span class="flex-grow flex flex-col pl-3">
                                         <span class="title-font font-medium text-gray-900">作成日：{{ dayjs(post.created_at).format('YYYY年MM月DD日') }}</span>
                                     </span>
+                                    <span v-if="post.deadline" class="mt-3 pl-3">
+                                        <span class="title-font font-medium text-white bg-red-400 p-1 rounded">期限　：{{ dayjs(post.deadline).format('YYYY年MM月DD日') }}</span>
+                                    </span>
                                 </a>
                             </div>
                         </div>
