@@ -73,6 +73,9 @@ onMounted(() => {
                     <DirectMessageList :users="props.allUsers" />
                 </div>
                 <div class="bg-white mt-4 w-2/3">
+                    <div class="my-2 py-2 border-b-2 border-black">
+                        <h2 class="pl-4 font-semibold text-xl text-gray-800 leading-tight">{{ props.opponent.name }}</h2>
+                    </div>
                     <div class="text-center" v-for="message in directMessages.value" :key="message.id">
                         <template v-if="message.send == props.loginUser.id">
                             <div class="mr-3 text-right">
