@@ -14,22 +14,15 @@ use Illuminate\Http\Response;
 class CommentController extends Controller
 {
     public function getComments(Post $post){
-        $comments = [];
-        $users = [];
+        $postId = $post->id;
+        $comments = Comment::with('user')
+            ->where('post_id', $postId)
+            ->get();
 
-        foreach($post->comments as $comment){
-            array_push($comments, $comment);
-        }
-
-        foreach($post->comments as $comment){
-            if(!in_array($comment->user,$users)){
-                array_push($users, $comment->user);
-            }
-        }
+        // \Log::debug('getComments', [$comments]);
 
         return [
             'comments' => $comments,
-            'users' => $users,
         ];
     }
 
